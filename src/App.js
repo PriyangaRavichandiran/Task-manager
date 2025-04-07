@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, Navbar } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'; // We'll add custom styles here
 
 function App() {
+  // Theme state
+  const [darkMode, setDarkMode] = useState(true);
+  
   // Initial board state
   const [boards, setBoards] = useState([
     {
@@ -35,6 +38,16 @@ function App() {
   const [newCardDescription, setNewCardDescription] = useState('');
   const [newBoardTitle, setNewBoardTitle] = useState('');
   const [showNewBoard, setShowNewBoard] = useState(false);
+
+  // Apply theme to document body
+  useEffect(() => {
+    document.body.className = darkMode ? 'dark-theme' : 'light-theme';
+  }, [darkMode]);
+
+  // Toggle theme
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
 
   // Add a new card to a board
   const addCard = (boardId) => {
@@ -120,24 +133,52 @@ function App() {
     setBoards(updatedBoards);
   };
 
+  // Theme-dependent classes
+  const themeClasses = {
+    appContainer: darkMode ? 'app-container dark-theme' : 'app-container light-theme',
+    navbar: darkMode ? 'bg-dark' : 'bg-light',
+    navbarVariant: darkMode ? 'dark' : 'light',
+    boardBg: darkMode ? 'bg-dark-secondary' : 'bg-light-secondary',
+    cardBg: darkMode ? 'bg-dark text-light' : 'bg-white text-dark',
+    borderColor: darkMode ? 'border-secondary' : 'border-light-secondary',
+    formBg: darkMode ? 'bg-dark text-light' : 'bg-white text-dark',
+    badge: darkMode ? 'bg-dark-tertiary' : 'bg-light-tertiary text-dark',
+    addButtonVariant: darkMode ? 'outline-light' : 'outline-dark',
+    moveButtonVariant: darkMode ? 'outline-secondary' : 'outline-secondary',
+    textColor: darkMode ? 'text-light' : 'text-dark',
+    textSecondary: darkMode ? 'text-light-secondary' : 'text-secondary'
+  };
+
   return (
-    <div className="app-container bg-dark text-light">
-      <Navbar bg="dark" variant="dark" className="mb-4 shadow">
+    <div className={themeClasses.appContainer}>
+      <Navbar bg={themeClasses.navbar.split('-')[1]} variant={themeClasses.navbarVariant} className="mb-4 shadow">
         <Container>
           <Navbar.Brand className="fw-bold">
             <i className="bi bi-kanban me-2"></i>
-            Dark Trello
+            {darkMode ? 'Dark' : 'Light'} Trello
           </Navbar.Brand>
+          <Button 
+            variant={darkMode ? "outline-light" : "outline-dark"}
+            size="sm"
+            onClick={toggleTheme}
+            className="theme-toggle-btn"
+          >
+            {darkMode ? (
+              <><i className="bi bi-sun me-1"></i> Light Mode</>
+            ) : (
+              <><i className="bi bi-moon me-1"></i> Dark Mode</>
+            )}
+          </Button>
         </Container>
       </Navbar>
       
       <Container fluid>
         <Row className="mb-4">
           <Col className="d-flex align-items-center">
-            <h5 className="mb-0 me-3">My Boards</h5>
+            <h5 className={`mb-0 me-3 ${themeClasses.textColor}`}>My Boards</h5>
             {!showNewBoard ? (
               <Button 
-                variant="outline-light"
+                variant={themeClasses.addButtonVariant}
                 size="sm"
                 onClick={() => setShowNewBoard(true)}
                 className="add-board-btn"
@@ -151,7 +192,7 @@ function App() {
                   placeholder="Board title"
                   value={newBoardTitle}
                   onChange={(e) => setNewBoardTitle(e.target.value)}
-                  className="me-2 bg-dark text-light"
+                  className={`me-2 ${themeClasses.formBg}`}
                 />
                 <Button 
                   variant="success"
@@ -162,7 +203,7 @@ function App() {
                   Add
                 </Button>
                 <Button 
-                  variant="outline-light"
+                  variant={themeClasses.addButtonVariant}
                   size="sm"
                   onClick={() => setShowNewBoard(false)}
                 >
@@ -176,15 +217,15 @@ function App() {
         <Row className="board-container flex-nowrap overflow-auto pb-3">
           {boards.map(board => (
             <Col key={board.id} className="board-column" xs={12} md={4} lg={3}>
-              <div className="board bg-dark-secondary rounded shadow">
-                <div className="board-header p-3 border-bottom border-secondary d-flex justify-content-between align-items-center">
-                  <h6 className="mb-0">{board.title}</h6>
-                  <span className="badge bg-dark-tertiary rounded-pill">{board.cards.length}</span>
+              <div className={`board ${themeClasses.boardBg} rounded shadow`}>
+                <div className={`board-header p-3 border-bottom ${themeClasses.borderColor} d-flex justify-content-between align-items-center`}>
+                  <h6 className={`mb-0 ${themeClasses.textColor}`}>{board.title}</h6>
+                  <span className={`badge ${themeClasses.badge} rounded-pill`}>{board.cards.length}</span>
                 </div>
                 
                 <div className="board-body p-2">
                   {board.cards.map(card => (
-                    <Card key={card.id} className="mb-2 bg-dark text-light border-secondary">
+                    <Card key={card.id} className={`mb-2 ${themeClasses.cardBg} ${themeClasses.borderColor}`}>
                       <Card.Body className="py-2 px-3">
                         <div className="d-flex justify-content-between align-items-center mb-1">
                           <Card.Title className="h6 mb-0">{card.title}</Card.Title>
@@ -198,14 +239,14 @@ function App() {
                             </Button>
                           </div>
                         </div>
-                        <Card.Text className="small text-light-secondary">
+                        <Card.Text className={`small ${themeClasses.textSecondary}`}>
                           {card.description}
                         </Card.Text>
                         <div className="mt-2">
                           {boards.filter(b => b.id !== board.id).map(targetBoard => (
                             <Button 
                               key={targetBoard.id}
-                              variant="outline-secondary"
+                              variant={themeClasses.moveButtonVariant}
                               size="sm"
                               className="me-1 py-0 px-1 small"
                               onClick={() => moveCard(board.id, targetBoard.id, card.id)}
@@ -219,12 +260,12 @@ function App() {
                   ))}
                   
                   {showNewCard[board.id] ? (
-                    <Card className="mb-2 bg-dark-secondary text-light border-secondary">
+                    <Card className={`mb-2 ${themeClasses.boardBg} ${themeClasses.textColor} ${themeClasses.borderColor}`}>
                       <Card.Body className="py-2 px-3">
                         <Form.Control
                           size="sm"
                           placeholder="Card title"
-                          className="mb-2 bg-dark text-light"
+                          className={`mb-2 ${themeClasses.formBg}`}
                           value={newCardTitle}
                           onChange={(e) => setNewCardTitle(e.target.value)}
                         />
@@ -233,7 +274,7 @@ function App() {
                           rows={2}
                           size="sm"
                           placeholder="Description"
-                          className="mb-2 bg-dark text-light"
+                          className={`mb-2 ${themeClasses.formBg}`}
                           value={newCardDescription}
                           onChange={(e) => setNewCardDescription(e.target.value)}
                         />
@@ -246,7 +287,7 @@ function App() {
                             Add
                           </Button>
                           <Button 
-                            variant="outline-light"
+                            variant={themeClasses.addButtonVariant}
                             size="sm"
                             onClick={() => setShowNewCard({})}
                           >
@@ -257,7 +298,7 @@ function App() {
                     </Card>
                   ) : (
                     <Button 
-                      variant="outline-secondary" 
+                      variant={themeClasses.moveButtonVariant}
                       className="w-100 my-2 add-card-btn"
                       onClick={() => setShowNewCard({...showNewCard, [board.id]: true})}
                     >

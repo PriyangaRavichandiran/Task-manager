@@ -1,26 +1,47 @@
-/* Custom CSS for Dark Trello Clone */
+/* Custom CSS with Dark/Light Mode Support */
 @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
 
-body {
+/* Dark Theme */
+.dark-theme {
   background-color: #121212;
   color: #e4e6eb;
 }
 
-.app-container {
-  min-height: 100vh;
+/* Light Theme */
+.light-theme {
+  background-color: #f8f9fa;
+  color: #212529;
 }
 
-/* Custom dark theme colors */
-.bg-dark-secondary {
+.app-container {
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark theme custom colors */
+.dark-theme .bg-dark-secondary {
   background-color: #1e1e1e;
 }
 
-.bg-dark-tertiary {
+.dark-theme .bg-dark-tertiary {
   background-color: #2d2d2d;
 }
 
-.text-light-secondary {
+.dark-theme .text-light-secondary {
   color: #b0b3b8;
+}
+
+/* Light theme custom colors */
+.light-theme .bg-light-secondary {
+  background-color: #f0f0f0;
+}
+
+.light-theme .bg-light-tertiary {
+  background-color: #e2e2e2;
+}
+
+.light-theme .border-light-secondary {
+  border-color: #dee2e6;
 }
 
 /* Board styling */
@@ -36,6 +57,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease;
 }
 
 .board-body {
@@ -44,36 +66,72 @@ body {
   max-height: calc(100vh - 180px);
 }
 
-/* Custom button hover effects */
-.add-card-btn:hover, .add-board-btn:hover {
+/* Button hover effects */
+.dark-theme .add-card-btn:hover, 
+.dark-theme .add-board-btn:hover {
   background-color: #2d2d2d;
   border-color: #6c757d;
 }
 
+.light-theme .add-card-btn:hover, 
+.light-theme .add-board-btn:hover {
+  background-color: #e2e2e2;
+  border-color: #6c757d;
+}
+
 /* Custom scrollbar for dark theme */
-::-webkit-scrollbar {
+.dark-theme ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-::-webkit-scrollbar-track {
+.dark-theme ::-webkit-scrollbar-track {
   background: #1e1e1e;
 }
 
-::-webkit-scrollbar-thumb {
+.dark-theme ::-webkit-scrollbar-thumb {
   background: #3a3a3a;
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.dark-theme ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
+/* Custom scrollbar for light theme */
+.light-theme ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.light-theme ::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+.light-theme ::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
 /* Card hover effect */
-.card:hover {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+.card {
   transition: all 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.dark-theme .card:hover {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.light-theme .card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Animation for new cards */
@@ -84,13 +142,39 @@ body {
 
 .card {
   animation: fadeIn 0.3s ease;
-  transition: all 0.2s ease;
 }
 
 /* Form controls in dark mode */
-.form-control:focus {
+.dark-theme .form-control:focus {
   background-color: #2d2d2d;
   color: #e4e6eb;
   border-color: #495057;
   box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+}
+
+/* Form controls in light mode */
+.light-theme .form-control:focus {
+  background-color: #fff;
+  color: #212529;
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Theme toggle button animation */
+.theme-toggle-btn {
+  transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  transform: rotate(5deg);
+}
+
+/* Smooth transitions for theme changes */
+.card,
+.board,
+.form-control,
+.btn,
+.badge,
+.navbar {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
